@@ -1,75 +1,139 @@
 # AIDetection
 
-**AIDetection** is a forensic tool designed to detect AI-generated images through a multi-mechanism analysis approach. It examines various aspects of an image, including metadata, frequency domains, texture, quality, and compression artifacts to provide a robust assessment of its origin.
+**AIDetection** is a forensic tool designed to detect AI-generated images through a multi-mechanism analysis approach. It examines various aspects of an image, including metadata, frequency domains, texture patterns, and compression artifacts to provide a robust assessment of its origin.
 
-This project is licensed under the terms of the MIT license.
+This project is open-source and licensed under the terms of the MIT license.
 
-## Features
+![Next Sight Banner](https://raw.githubusercontent.com/ZvonkoNS/AIDetection/main/assets/brand_banner.txt)
 
-*   **Multi-Mechanism Analysis**: Combines several detection methods for higher accuracy.
-*   **Metadata Forensics**: Analyzes EXIF, GPS, ICC, and MakerNote data.
-*   **Frequency-Domain Analysis**: Uses DCT/FFT and spectral residuals.
-*   **Texture Pattern Analysis**: Employs LBP, GLCM, and Gabor filters.
-*   **Quality Metrics**: Measures sharpness, noise, lens distortion, and banding.
-*   **Compression & Pixel Statistics**: Detects quantization, double-compression, and bit-plane anomalies.
-*   **Multiple Report Formats**: Generates reports in JSON, PDF, and plain text.
-*   **Command-Line and Interactive Modes**: Can be used for single-file analysis, batch processing, or through an interactive menu.
+## Key Features
+
+*   **Comprehensive Analysis**: Employs a suite of detection mechanisms for high accuracy:
+    *   **Metadata Forensics**: Analyzes EXIF, GPS, and other embedded metadata for signs of manipulation.
+    *   **Frequency Analysis**: Detects unnatural patterns in the frequency domain using DCT and FFT.
+    *   **Texture Analysis**: Identifies synthetic textures using Local Binary Patterns (LBP).
+    *   **Compression Analysis**: Finds artifacts indicative of digital alteration or generation.
+    *   **Pixel Statistics**: Examines statistical properties of pixels for anomalies.
+*   **Multiple Report Formats**: Generates user-friendly reports in `TEXT`, `JSON`, `PDF`, and a summary `CSV` for batch operations.
+*   **Flexible Interface**: Can be operated via a straightforward command-line interface (CLI) or a simple interactive menu.
+*   **High Performance**: Optimized for fast analysis, with support for parallel processing in batch mode.
+*   **Cross-Platform**: Fully compatible with Windows, macOS, and Linux.
 
 ## Installation
 
-To get started with AIDetection, clone the repository and install the required dependencies.
+To get started with AIDetection, it is recommended to use a virtual environment.
 
-```bash
-git clone https://github.com/ZvonkoNS/AIDetection.git
-cd AIDetection
-pip install -r requirements.txt
-```
+1.  **Clone the Repository:**
+    ```bash
+    git clone https://github.com/ZvonkoNS/AIDetection.git
+    cd AIDetection
+    ```
+
+2.  **Create and Activate a Virtual Environment:**
+    *   On **Windows**:
+        ```bash
+        python -m venv venv
+        .\venv\Scripts\activate
+        ```
+    *   On **macOS/Linux**:
+        ```bash
+        python3 -m venv venv
+        source venv/bin/activate
+        ```
+
+3.  **Install Dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 ## Usage
 
-AIDetection can be run from the command line or in an interactive mode.
+AIDetection is launched via the `run_aidetect.py` script.
 
 ### Interactive Mode
 
-To launch the interactive menu, simply run the script without any arguments:
+For ease of use, you can run the tool without any arguments to launch an interactive menu.
 
 ```bash
 python run_aidetect.py
 ```
 
-From the menu, you can choose to analyze a single image, a directory of images, or view information about the tool.
+The interactive mode will guide you through analyzing a single image or an entire directory.
 
 ### Command-Line Interface (CLI)
 
-#### Analyzing a Single Image
+For automation and advanced use, the CLI provides full control over the tool's features.
+
+#### **Analyze a Single Image**
+
+The default output is a text report printed to the console.
 
 ```bash
 python run_aidetect.py analyze --input /path/to/your/image.jpg
 ```
 
-#### Analyzing a Directory
+To save a report in a different format, such as JSON:
 
 ```bash
-python run_aidetect.py analyze --input /path/to/your/directory --format json --recursive
+python run_aidetect.py analyze --input /path/to/image.jpg --format json --output-dir /path/to/reports
 ```
 
-You can specify the output format (`--format`), and choose to scan recursively (`--recursive`). For batch analysis, you can also set the number of parallel workers (`--workers`).
+#### **Analyze a Directory of Images**
 
-### Available Arguments
+When analyzing a directory, a summary report (`summary_report.csv`) will be generated in the output directory.
 
-*   `--input`: Path to the image or directory.
-*   `--format`: Report format (text, json, pdf).
-*   `--output-dir`: Directory to save reports.
-*   `--recursive`: Recursively scan directories.
-*   `--workers`: Number of parallel workers for batch processing.
-*   `--log-level`: Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL).
-*   `--conservative`: Use a higher threshold for AI detection to reduce false positives.
-*   `--about`: Show information about the tool.
+```bash
+python run_aidetect.py analyze --input /path/to/your/directory
+```
+
+For a deep scan of a directory and its subdirectories, use the `--recursive` flag. You can also increase performance by using multiple processor cores with the `--workers` flag.
+
+```bash
+python run_aidetect.py analyze --input /path/to/your/directory --format pdf --recursive --workers 4
+```
+
+### **Command-Line Arguments**
+
+| Argument               | Alias | Description                                                                    |
+| ---------------------- | ----- | ------------------------------------------------------------------------------ |
+| `--input`              | `-i`  | Path to the input image file or directory. **(Required)**                        |
+| `--format`             | `-f`  | Output report format (`text`, `json`, `pdf`). Default is `text`.                 |
+| `--output-dir`         |       | Directory to save generated reports. Defaults to the input directory.          |
+| `--recursive`          |       | Recursively scan for images in subdirectories.                                 |
+| `--workers`            |       | Number of parallel workers for batch analysis.                                 |
+| `--log-level`          |       | Set the logging level (`DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`).         |
+| `--conservative`       |       | Use a higher threshold for AI detection to reduce false positives.               |
+| `--config`             |       | Path to a custom TOML/YAML configuration file.                                 |
+| `--weights`            |       | Override ensemble weights (e.g., `'METADATA=0.2,FREQUENCY=0.3'`).              |
+| `--about`              |       | Show product banner and information.                                           |
+| `--interactive`        |       | Launch the simple interactive menu.                                            |
+
+## Building a Standalone Executable
+
+You can create a standalone executable for your platform by using the provided build scripts.
+
+*   On **Windows**:
+    ```bash
+    .\build.bat
+    ```
+*   On **macOS/Linux**:
+    ```bash
+    chmod +x build.sh
+    ./build.sh
+    ```
+
+The executable will be located in the `dist/` directory.
 
 ## Contributing
 
-Contributions are welcome! If you would like to contribute to this project, please fork the repository and submit a pull request.
+Contributions are welcome! If you have suggestions or improvements, please fork the repository, create a new branch for your feature, and submit a pull request.
+
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
