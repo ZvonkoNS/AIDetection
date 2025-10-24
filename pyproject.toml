@@ -1,0 +1,32 @@
+[project]
+name = "aidetect"
+version = "0.1.0"
+description = "AIDetection: Forensic AI image detection by Next Sight"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+dependencies = [
+    "numpy==1.26.4",
+    "Pillow==10.4.0",
+    "tqdm==4.66.4",
+    "scipy==1.14.1",
+    "scikit-image==0.25.2",
+]
+authors = [
+    { name = "Next Sight", email = "info@next-sight.com" }
+]
+maintainers = [
+    { name = "Next Sight", email = "info@next-sight.com" }
+]
+
+[project.urls]
+Homepage = "https://www.next-sight.com"
+Repository = "https://github.com/ZvonkoNS/AIDetection"
+Issues = "https://github.com/ZvonkoNS/AIDetection/issues"
+
+[project.scripts]
+aidetect = "aidetect.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

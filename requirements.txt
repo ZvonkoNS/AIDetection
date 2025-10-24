@@ -1,0 +1,7 @@
+# Core application dependencies
+numpy==1.26.4
+Pillow==10.4.0
+tqdm==4.66.4
+scipy==1.14.1
+scikit-image==0.25.2
+fpdf2==2.7.9
